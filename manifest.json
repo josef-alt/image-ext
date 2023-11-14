@@ -1,7 +1,8 @@
 {
 	"manifest_version": 3,
-	"name": "name",
-	"version": "1.0.0",
+	"name": "image ext",
+	"description": "basic image processing chrome extension",
+	"version": "1.2.3",
 	"action": {
 		"default_popup": "index.html"
 	},
