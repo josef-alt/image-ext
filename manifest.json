@@ -20,10 +20,10 @@
 		"scripting"
 	],
 	"content_scripts": [
-    {
+	{
 		"matches": ["<all_urls>"],
 		"js": ["index.js"]
-    }],
+	}],
 	"content_security_policy": {
 		"sandbox": "sandbox allow-scripts; script-src 'self' 'unsafe-eval';"
 	},
