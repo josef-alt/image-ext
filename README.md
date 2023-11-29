@@ -1,11 +1,11 @@
 # image-ext
 # Description
-## A basic image forensics extension for Chrome.
+A basic image forensics extension for Chrome.
 # Why?
-## To experiment with Chrome extensions & MV3
-## To learn about image processing
+1. To experiment with Chrome extensions & MV3
+2. To learn about image processing
 # Known Issues
-## Noise extraction does not finish on large images
+Noise extraction does not finish on large images
 # Use
 Don't.
 1. Clone repo
