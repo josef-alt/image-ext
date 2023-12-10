@@ -1,3 +1,4 @@
+// used to keep track of original image selected
 var operating_list;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -23,21 +24,29 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 		});
 		
+		// run filter functions when an image is selected
 		document.getElementById("original_images")
 			.addEventListener("click", function(e) {
+				// make sure it is one of the page's original images being selected
+				// we don't want to analyse our own images
 				if(e.target && !isDefined(e.target.closest("li li"))) {
 					const image = e.target.src ? e.target : e.target.querySelector("img");
 					const list = e.target.closest("li").querySelector("ul");
 					
+					// store location for when we get a response
 					operating_list = list;
-					if(operating_list.getElementsByTagName("li").length == 0) {
 					
+					// expected behavior:
+					//		select an image = process the image
+					//		select it again = hide processed images
+					if(operating_list.getElementsByTagName("li").length == 0) {
 						const canvas = document.createElement("canvas");
 						canvas.width = image.naturalWidth;
 						canvas.height = image.naturalHeight;
 						canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
 						const base64 = canvas.toDataURL("image/png");
 						
+						// send query to sandbox to process the selected image
 						document.getElementById("sandbox").contentWindow.postMessage({ url: image.src, base64}, "*");
 					} else {
 						operating_list.innerHTML = '';
@@ -48,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 
+// display filtered/altered images below selected
 window.addEventListener("message", (event) => {
 	const { original, processed } = event.data;
 
@@ -59,6 +69,8 @@ window.addEventListener("message", (event) => {
 			new_li.appendChild(new_p);
 			operating_list.append(new_li);
 		}
+		
+		// load each processed image into our sub-list
 		for(const [ operation, alteredImage ] of Object.entries(processed)) {
 			console.log("append", operation);
 			const new_li = document.createElement("li");
@@ -90,15 +102,18 @@ function execute(tab) {
 	}, render);
 }
 
+// retrieve all images from a webpage
 function get() {
 	console.log("getting images");
 	const images = document.getElementsByTagName("img");
 	
+	// filter out all the images too small to be important
 	return Array.from(images)
 		.filter(img => img.naturalWidth > 50 && img.naturalHeight > 50)
 		.map(image => image.src);
 }
 
+// load retrieved images into popup
 function render(images) {
 	if(!images)
 		return false;

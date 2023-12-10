@@ -1,8 +1,11 @@
+// retrieving meta data has posed a challenge
+// TODO - more research
 function getData(url) {
 	console.log("getting data");
 	const srcImg = new Image();
 	srcImg.src = url;
 	
+	// so far all I have been able to retrieve is dimensions
 	return new Promise((resolve, reject) => {
 		srcImg.onload = function() {
 			var data = {};
@@ -14,6 +17,8 @@ function getData(url) {
 	});
 }
 
+// greyscale is not necessarily useful for image forensics
+// but it represented a simple filter to test sandbox functionality
 function greyscale(base64) {
 	console.log("converting to greyscale");
 	const srcImg = document.createElement("img");

@@ -1,6 +1,8 @@
+// respond to incoming message with all processed images
 window.addEventListener("message", (event) => {
 	const { url, base64 } = event.data;
 	
+	// using promises to allow for asynchronous computing
 	let metadataPromise = getData(url);
 	let greyscalePromise = greyscale(base64);
 	let elaPromise = ela(base64);
