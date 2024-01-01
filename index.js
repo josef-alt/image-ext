@@ -1,5 +1,5 @@
 // used to keep track of original image selected
-var operating_list;
+var operating_list = new Map();
 
 document.addEventListener('DOMContentLoaded', function () {
 	const getbutton = document.getElementById("get_images");
@@ -33,18 +33,18 @@ document.addEventListener('DOMContentLoaded', function () {
 					const image = e.target.src ? e.target : e.target.querySelector("img");
 					const list = e.target.closest("li").querySelector("ul");
 					
-					// store location for when we get a response
-					operating_list = list;
-					
 					// expected behavior:
 					//		select an image = process the image
 					//		select it again = hide processed images
-					if(operating_list.getElementsByTagName("li").length == 0) {
+					if(list.getElementsByTagName("li").length == 0) {
 						const canvas = document.createElement("canvas");
 						canvas.width = image.naturalWidth;
 						canvas.height = image.naturalHeight;
 						canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
 						const base64 = canvas.toDataURL("image/png");
+						
+						// save to map
+						operating_list.set(image.src, list);
 						
 						// send query to sandbox to process the selected image
 						document.getElementById("sandbox").contentWindow.postMessage({ url: image.src, base64}, "*");
@@ -60,14 +60,15 @@ document.addEventListener('DOMContentLoaded', function () {
 // display filtered/altered images below selected
 window.addEventListener("message", (event) => {
 	const { original, processed } = event.data;
-
-	if(operating_list) {
+	var source_list = operating_list.get(original);
+	
+	if(source_list) {
 		if(event.data.metadata) {
 			const new_li = document.createElement("li");
 			const new_p = document.createElement("p");
 			new_p.innerHTML = `Original Size: ${ event.data.metadata.width } <b>x</b> ${ event.data.metadata.height }`;
 			new_li.appendChild(new_p);
-			operating_list.append(new_li);
+			source_list.append(new_li);
 		}
 		
 		// load each processed image into our sub-list
@@ -84,7 +85,7 @@ window.addEventListener("message", (event) => {
 		  	new_li.appendChild(new_label);
 			new_li.appendChild(new_i);
 			
-			operating_list.append(new_li);
+			source_list.append(new_li);
 		}
 	} else {
 		console.log("list item not found");
