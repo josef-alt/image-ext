@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						// send query to sandbox to process the selected image
 						document.getElementById("sandbox").contentWindow.postMessage({ url: image.src, base64}, "*");
 					} else {
-						operating_list.innerHTML = '';
+						list.innerHTML = '';
 					}
 				}
 			});
