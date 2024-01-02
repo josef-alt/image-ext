@@ -1,7 +1,6 @@
 // run two stages of error level analysis on the image
 function ela(base64) {
 	console.log("error level analysis");
-
 	const comp_q1 = 95;
 	const comp_q2 = 90;
 	const scale = 4;
@@ -20,7 +19,7 @@ function ela(base64) {
 			compressionContext.drawImage(image, 0, 0, width, height);
 			
 			// first stage of compression
-			const comped1 = compressionCanvas.toDataURL("image/jpeg", comp_q1 * 0.01);
+			const comped1 = compress(compressionCanvas, comp_q1);
 			
 			var compressed = new Image();
 			compressed.src = comped1;
@@ -37,16 +36,16 @@ function ela(base64) {
 				// convert to bgr to make usable
 				cv.cvtColor(difference, difference, cv.COLOR_BGRA2RGB);
 				cv.imshow(compressionCanvas, difference);
-				const diffURL1 = compressionCanvas.toDataURL("image/jpeg", 1);
+				const diffURL1 = toURL(compressionCanvas);
 				
 				// second stage of compression
 				compressionContext.drawImage(compressed, 0, 0, width, height);
-				const comped2 = compressionCanvas.toDataURL("image/jpeg", comp_q2 * 0.01);
+				const comped2 = compress(compressionCanvas, comp_q2);
 				
 				var compressed2 = new Image();
 				compressed2.src = comped2;
 				compressed2.onload = function() {
-					// compute the difference between our image twice compressed
+					// compute the difference between our image 2x compressed
 					// and our original compressed image, apply scale
 					var image2 = cv.imread(compressed2);
 					const difference2 = new cv.Mat(height, width, cv.CV_64F);
@@ -55,7 +54,7 @@ function ela(base64) {
 					
 					cv.cvtColor(difference, difference2, cv.COLOR_BGRA2RGB);
 					cv.imshow(compressionCanvas, difference2);
-					const diffURL2 = compressionCanvas.toDataURL("image/jpeg", 1);
+					const diffURL2 = toURL(compressionCanvas);
 					
 					result = {}
 					result[`error-level analysis ${ comp_q1 }`] = diffURL1;
@@ -67,6 +66,15 @@ function ela(base64) {
 			compressed.onerror = (error) => reject(error);
 		};
 		image.onerror = (error) => reject(error);
-
 	});
+}
+
+// get data url with no compression
+function toURL(canvas) {
+	return canvas.toDataURL("image/jpeg", 1);
+}
+
+// get data url with applied compression
+function compress(canvas, quality) {
+	return canvas.toDataURL("image/jpeg", quality * 0.01);
 }

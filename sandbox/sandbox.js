@@ -7,7 +7,13 @@ window.addEventListener("message", (event) => {
 	let greyscalePromise = greyscale(base64);
 	let elaPromise = ela(base64);
 	let noisePromise = noise(base64);
-	Promise.all([ metadataPromise, greyscalePromise, elaPromise, noisePromise ])
+	let promises = [ 
+		metadataPromise, 
+		greyscalePromise, 
+		elaPromise, 
+		noisePromise ];
+		
+	Promise.all(promises)
 		.then((returned) => {
 			var message = {};
 			message['original'] = url;

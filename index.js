@@ -27,10 +27,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		// run filter functions when an image is selected
 		document.getElementById("original_images")
 			.addEventListener("click", function(e) {
-				// make sure it is one of the page's original images being selected
-				// we don't want to analyse our own images
+				// make sure it is one of the page's original images being
+				// selected, we don't want to analyse our own images
 				if(e.target && !isDefined(e.target.closest("li li"))) {
-					const image = e.target.src ? e.target : e.target.querySelector("img");
+					const image = e.target;
+					if(!image.src)
+						image = image.querySelector("img");
+					
 					const list = e.target.closest("li").querySelector("ul");
 					
 					// expected behavior:
@@ -38,16 +41,19 @@ document.addEventListener('DOMContentLoaded', function () {
 					//		select it again = hide processed images
 					if(list.getElementsByTagName("li").length == 0) {
 						const canvas = document.createElement("canvas");
-						canvas.width = image.naturalWidth;
-						canvas.height = image.naturalHeight;
-						canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+						const W = image.naturalWidth;
+						const H = image.naturalHeight;
+						canvas.width = W;
+						canvas.height = H;
+						canvas.getContext("2d").drawImage(image, 0, 0, W, H);
 						const base64 = canvas.toDataURL("image/png");
 						
 						// save to map
 						operating_list.set(image.src, list);
 						
 						// send query to sandbox to process the selected image
-						document.getElementById("sandbox").contentWindow.postMessage({ url: image.src, base64}, "*");
+						document.getElementById("sandbox").contentWindow
+							.postMessage({ url: image.src, base64}, "*");
 					} else {
 						list.innerHTML = '';
 					}
@@ -122,7 +128,8 @@ function render(images) {
 	const template = document.getElementById("li_template");
 	const elements = new Set();
 
-	const imageUrls = images.map(im => im.result).reduce((r1, r2) => r1.concat(r2));
+	const imageUrls = images.map(im => im.result)
+		.reduce((r1, r2) => r1.concat(r2));
 	for (const img of imageUrls) {
 		const element = template.content.firstElementChild.cloneNode(true);
 		element.querySelector(".loadme").src = img;
