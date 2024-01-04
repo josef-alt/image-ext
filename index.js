@@ -80,8 +80,6 @@ window.addEventListener("message", (event) => {
 		// load each processed image into our sub-list
 		const template = document.getElementById("filtered_template");
 		for(const [ operation, alteredImage ] of Object.entries(processed)) {
-			console.log("append", operation);
-			
 			const li = document.createElement("li");
 			const element = template.content.firstElementChild.cloneNode(true);
 			element.querySelector(".caption").innerHTML = operation;
