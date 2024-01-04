@@ -44,7 +44,7 @@ details>summary span.icon {
 }
 
 details[open] summary span.icon {
-  transform: rotate(180deg);
+  transform: scaleY(-1);
 }
 
 summary {
