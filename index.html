@@ -10,10 +10,10 @@
 	<iframe id="sandbox" src="./sandbox/sandbox.html" style="display: none;">
 	</iframe>
 
-	<template id="li_template">
+	<template id="outer_template">
 		<li>
-			<img class="loadme">
-			<ul id="filtered"></ul>
+			<img class="original_img">
+			<ul id="filtered_list"></ul>
 		</li>
 	</template>
 
@@ -22,7 +22,7 @@
 		<details>
 			<summary>
 				<figcaption class="caption">caption</figcaption>
-				 <span class="icon">v</span>
+				<span class="icon">v</span>
 			</summary>
 			<img class="processed">
 		</details>
@@ -35,5 +35,4 @@
   
 	<script src="index.js"></script>
 </body>
-
 </html>
