@@ -82,10 +82,13 @@ window.addEventListener("message", (event) => {
 		for(const [ operation, alteredImage ] of Object.entries(processed)) {
 			console.log("append", operation);
 			
+			const li = document.createElement("li");
 			const element = template.content.firstElementChild.cloneNode(true);
 			element.querySelector(".caption").innerHTML = operation;
 			element.querySelector(".processed").src = alteredImage;
-			source_list.append(element);
+			
+			li.appendChild(element);
+			source_list.append(li);
 		}
 	} else {
 		console.log("list item not found");
@@ -125,9 +128,12 @@ function render(images) {
 	const imageUrls = images.map(im => im.result)
 		.reduce((r1, r2) => r1.concat(r2));
 	for (const img of imageUrls) {
-		const element = template.content.firstElementChild.cloneNode(true);
+		const li = document.createElement("li");
+		const element = template.content.cloneNode(true);
 		element.querySelector(".original_img").src = img;
-		elements.add(element);
+		
+		li.appendChild(element);
+		elements.add(li);
 	}
 	document.getElementById("original_images").append(...elements);
 }
