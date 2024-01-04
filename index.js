@@ -80,18 +80,12 @@ window.addEventListener("message", (event) => {
 		// load each processed image into our sub-list
 		for(const [ operation, alteredImage ] of Object.entries(processed)) {
 			console.log("append", operation);
-			const new_li = document.createElement("li");
 			
-			const new_i  = document.createElement("img");
-			new_i.src = alteredImage;
-			
-			const new_label = document.createElement("figcaption");
-			new_label.innerHTML = operation;
-			
-		  	new_li.appendChild(new_label);
-			new_li.appendChild(new_i);
-			
-			source_list.append(new_li);
+			const template = document.getElementById("filtered_template");
+			const element = template.content.firstElementChild.cloneNode(true);
+			element.querySelector(".caption").innerHTML = operation;
+			element.querySelector(".processed").src = alteredImage;
+			source_list.append(element);
 		}
 	} else {
 		console.log("list item not found");
@@ -131,6 +125,7 @@ function render(images) {
 	const imageUrls = images.map(im => im.result)
 		.reduce((r1, r2) => r1.concat(r2));
 	for (const img of imageUrls) {
+		console.log(template.content);
 		const element = template.content.firstElementChild.cloneNode(true);
 		element.querySelector(".loadme").src = img;
 		elements.add(element);

@@ -27,3 +27,31 @@ ul.no-bullet {
 ul ul {
 	list-style-type: none;
 }
+
+/* 
+ * 	Styling for collapsible image pane
+ * 	Credit https://dev.to/jordanfinners/
+ */
+details {
+  user-select: none;
+}
+
+details>summary span.icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s;
+  margin-left: auto;
+}
+
+details[open] summary span.icon {
+  transform: rotate(180deg);
+}
+
+summary {
+  display: flex;
+  cursor: pointer;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
