@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				// make sure it is one of the page's original images being
 				// selected, we don't want to analyse our own images
 				if(e.target && !isDefined(e.target.closest("li li"))) {
-					const image = e.target;
+					let image = e.target;
 					if(!image.src)
 						image = image.querySelector("img");
 					

@@ -6,12 +6,15 @@ window.addEventListener("message", (event) => {
 	let metadataPromise = getData(url);
 	let greyscalePromise = greyscale(base64);
 	let elaPromise = ela(base64);
-	let noisePromise = noise(base64);
+	let medianNoisePromise = extractNoiseMedianFilter(base64);
+	let gaussianNoisePromise = extractNoiseGaussianBlur(base64);
+	
 	let promises = [ 
 		metadataPromise, 
 		greyscalePromise, 
 		elaPromise, 
-		noisePromise ];
+		medianNoisePromise,
+		gaussianNoisePromise ];
 		
 	Promise.all(promises)
 		.then((returned) => {
@@ -24,7 +27,9 @@ window.addEventListener("message", (event) => {
 			for(const [key, val] of Object.entries(returned[2])) {
 				processed[key] = val;
 			}
-			processed['noise'] = returned[3];
+			processed['median filter noise'] = returned[3];
+			processed['gaussian blur noise'] = returned[4];
+			
 			message['processed'] = processed;
 			
 			event.source.postMessage(message, event.origin);

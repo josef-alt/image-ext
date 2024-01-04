@@ -1,5 +1,5 @@
 // extract noise from an image
-function noise(base64) {
+function extractNoiseMedianFilter(base64) {
 	console.log("noise");
 	var image = new Image();
 	image.src = base64;
@@ -69,5 +69,33 @@ function noise(base64) {
 			resolve(noise);
 		}
 		image.onerror = (error) => reject(error);
+	});
+}
+
+function extractNoiseGaussianBlur(base64) {
+	console.log("blur noise");
+	var srcImg = new Image();
+	srcImg.src = base64;
+	
+	return new Promise((resolve, reject) => {
+		srcImg.onload = function() {
+			const orig = cv.imread(srcImg);
+			let blurred = new cv.Mat();
+			let ksize = new cv.Size(5, 5);
+			cv.GaussianBlur(orig, blurred, ksize, 0, 0, cv.BORDER_DEFAULT);
+
+			const outputCanvas = document.createElement("canvas");
+			
+			let diff = new cv.Mat();
+			cv.absdiff(orig, blurred, diff);
+			cv.convertScaleAbs(diff, diff, 2.5, 0);
+			cv.cvtColor(diff, diff, cv.COLOR_BGRA2RGB);
+			
+			cv.imshow(outputCanvas, diff);
+			let result = outputCanvas.toDataURL("image/jpeg", 1);
+			
+			resolve(result);
+		}
+		srcImg.onerror = (error) => reject(error);
 	});
 }
