@@ -4,8 +4,6 @@ A basic image forensics extension for Chrome.
 # Why?
 1. To experiment with Chrome extensions & MV3
 2. To learn about image processing
-# Known Issues
-Noise extraction does not finish on large images
 # Use
 Don't.
 1. Clone repo
